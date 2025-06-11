@@ -1,0 +1,2 @@
+BROWSER = ""
+USER_DATA = {}
