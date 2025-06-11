@@ -1,5 +1,4 @@
 import allure
-import pytest
 
 from conftest import create_orders
 from pages.feed_page import FeedPage
@@ -29,30 +28,38 @@ class TestFeedPage:
         orders_list = page.get_orders_numbers()
         assert page.check_user_orders_in_orders_list(orders, orders_list)
 
-    @pytest.mark.parametrize("period", ["день", "все время"]
-                             )
-    def test_daily_counter_increase(self, open_main_page_with_login, period):
-        allure.dynamic.title(f"Увеличение счетчика дневных заказов за {period}")
-        allure.dynamic.description(f"Проверка увеличения счетчика заказов за {period} после создания нового заказа")
+    @allure.title("Увеличение счетчика дневных заказов за день")
+    @allure.description("Проверка увеличения счетчика заказов за день после создания нового заказа")
+    def test_daily_orders_counter_increase(self, open_main_page_with_login):
         main_page = MainPage(open_main_page_with_login)
         feed_page = FeedPage(open_main_page_with_login)
-        if period == "день":
-            get_orders_count = feed_page.get_daily_orders_count
-            wait_orders_increase = feed_page.wait_daily_orders_increase
-        else:
-            get_orders_count = feed_page.get_all_orders_count
-            wait_orders_increase = feed_page.wait_all_orders_increase
         feed_page.open_feed_page()
-        init_orders_count = get_orders_count()
+        init_orders_count = feed_page.get_daily_orders_count()
         main_page.open_main_page()
         main_page.add_ingredient_to_order()
         main_page.click_to_order_create()
         main_page.is_order_modal_displayed()
         main_page.wait_load_animation_hide()
-        #order_number = main_page.get_order_number()
         feed_page.open_feed_page()
-        wait_orders_increase(init_orders_count)
-        assert init_orders_count < get_orders_count()
+        feed_page.wait_daily_orders_increase(init_orders_count)
+        assert init_orders_count < feed_page.get_daily_orders_count()
+
+    @allure.title("Увеличение счетчика дневных заказов за все время")
+    @allure.description("Проверка увеличения счетчика заказов за все время после создания нового заказа")
+    def test_all_orders_counter_increase(self, open_main_page_with_login):
+        main_page = MainPage(open_main_page_with_login)
+        feed_page = FeedPage(open_main_page_with_login)
+        feed_page.open_feed_page()
+        init_orders_count = feed_page.get_all_orders_count()
+        main_page.open_main_page()
+        main_page.add_ingredient_to_order()
+        main_page.click_to_order_create()
+        main_page.is_order_modal_displayed()
+        main_page.wait_load_animation_hide()
+        feed_page.open_feed_page()
+        feed_page.wait_all_orders_increase(init_orders_count)
+        assert init_orders_count < feed_page.get_all_orders_count()
+
 
     @allure.title('Отображение номера заказа в разделе "В работе"')
     @allure.description(

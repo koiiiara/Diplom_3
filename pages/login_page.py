@@ -33,6 +33,7 @@ class LoginPage(BasePage):
     def click_login_button(self):
         self.click_to_element(LoginPageLocators.LOGIN_BUTTON)
 
+    @allure.step("Авторизуемся существующим пользователем")
     def login(self, user_data):
         self.fill_login_form(user_data)
         self.click_login_button()

@@ -2,7 +2,6 @@ import allure
 
 from data.urls import WebUrls
 from locators.account_page_locators import AccountPageLocators
-from locators.global_locators import GlobalLocators
 from pages.base_page import BasePage
 
 

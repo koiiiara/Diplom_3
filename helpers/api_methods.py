@@ -1,10 +1,12 @@
 import random
+import allure
 import requests
 from data.urls import ApiUrls
 
 
 class UserMethods:
 
+    @allure.step("Создаем пользователя через API")
     def create_user(self, email, name, password):
         payload = {}
         if name:
@@ -17,6 +19,7 @@ class UserMethods:
         response = requests.post(ApiUrls.USER_REGISTER_URL, data=payload)
         return response.status_code, response.json()
 
+    @allure.step("Удаляем пользователя через API")
     def delete_user(self, token):
         headers = {
             'Authorization': token,
@@ -27,6 +30,7 @@ class UserMethods:
 
 class OrderMethods:
 
+    @allure.step("Создаем заказ через API")
     def create_order(self, ingredients, token):
         payload = {"ingredients": ingredients}
         if token:
@@ -36,6 +40,7 @@ class OrderMethods:
             response = requests.post(ApiUrls.ORDER_URL, data=payload)
         return response.status_code, response
 
+    @allure.step("Получаем список всех ингредиентов через API")
     def get_ingredients(self):
         response = requests.get(ApiUrls.INGREDIENTS_URL)
         if response.status_code == 200:
@@ -43,6 +48,7 @@ class OrderMethods:
         else:
             return None
 
+    @allure.step("Выбираем случайные ингредиенты")
     def get_random_ingredients_ids(self, count):
         order_methods = OrderMethods()
         ingredients_full = order_methods.get_ingredients()
